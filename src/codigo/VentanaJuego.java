@@ -7,8 +7,10 @@ package codigo;
 
 import java.applet.AudioClip;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -19,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Timer;
+
 
 /**
  *
@@ -42,6 +45,8 @@ public class VentanaJuego extends javax.swing.JFrame {
     boolean direccionMarcianos = false;
     //el contador sirve para decidir qué imagen del marciano toca poner
     int contador = 0;
+    public static Label label = new Label();
+    int puntuacion = 0;
     //imagen para cargar el spritesheet con todos los sprites del juego
     BufferedImage plantilla = null;
     Image [][] imagenes ;
@@ -62,7 +67,16 @@ public class VentanaJuego extends javax.swing.JFrame {
     public VentanaJuego() {
         
         initComponents();
+        setLocationRelativeTo(null);
+        Font font1;
+        font1 = new Font("calibri", Font.BOLD,30);
         
+                label.setFont(font1);
+                label.setForeground(Color.white);
+                label.setBackground(Color.GRAY);
+                label.setBounds(520,0,80,30);
+                label.setText("0");
+                jPanel1.add(label);
         
         //para cargar el archivo de imagenes: 
         // 1º, el nombre del archivo
@@ -225,6 +239,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                 }
             }
         }
+        
     }
     
     private void chequeaColision(){
@@ -245,6 +260,18 @@ public class VentanaJuego extends javax.swing.JFrame {
                                                 listaMarcianos[i][j].imagen1.getHeight(null)
                                                 );
                     if (rectanguloDisparo.intersects(rectanguloMarciano)){
+                        puntuacion += 20;
+                        label.setText("" + puntuacion);
+                        if(i <=3){
+                            puntuacion = puntuacion +100;
+                            
+                        }
+                        else if(i >3 && i <5){
+                            puntuacion = puntuacion +50;
+                        }
+                        if(i >= 5){
+                            puntuacion = puntuacion +20; 
+                        }
                         AudioClip sonido;
                         sonido = java.applet.Applet.newAudioClip(getClass().getResource("/sonidos/invaderkilled.wav"));
                         sonido.play();
