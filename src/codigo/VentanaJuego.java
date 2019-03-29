@@ -35,7 +35,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     //numero de marcianos que van a aparecer
     int filas = 8;
     int columnas = 10;
-
+    int muerteMarcianos = 0;
     BufferedImage buffer = null;
     boolean empezado = true;
     Nave miNave = new Nave();
@@ -51,6 +51,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     BufferedImage plantilla = null;
     Image [][] imagenes ;
     Image fondo;
+    Image youwin;
     
     Timer temporizador = new Timer(10, new ActionListener() {
         @Override
@@ -67,6 +68,11 @@ public class VentanaJuego extends javax.swing.JFrame {
     public VentanaJuego() {
         
         initComponents();
+        try{
+        youwin= ImageIO.read(getClass().getResource("/imagenes/youwin.png"));
+        }catch(IOException ex){
+            
+        }
         setLocationRelativeTo(null);
         Font font1;
         font1 = new Font("calibri", Font.BOLD,30);
@@ -173,7 +179,7 @@ public class VentanaJuego extends javax.swing.JFrame {
 //   
     }
     
-    private void bucleDelJuego() {
+    public void bucleDelJuego() {
         //se encarga del redibujado de los objetos en el jPanel1
         //primero borro todo lo que hay en el buffer
        
@@ -192,11 +198,14 @@ public class VentanaJuego extends javax.swing.JFrame {
 //            dispose();
 //            empezado = false;
 //        }
-        
+        if(muerteMarcianos == 80){
+            g2.drawImage(youwin, 0, 0,  null);
+        }
         pintaMarcianos(g2);
 //        chequeaFinMarcianos();
         chequeaColision();
         chequeaColisionMarcianoNave();
+        
         
         miNave.mueve();
         miDisparo.mueve();
@@ -272,6 +281,7 @@ public class VentanaJuego extends javax.swing.JFrame {
                         if(i >= 5){
                             puntuacion = puntuacion +20; 
                         }
+                        muerteMarcianos = muerteMarcianos +1;
                         AudioClip sonido;
                         sonido = java.applet.Applet.newAudioClip(getClass().getResource("/sonidos/invaderkilled.wav"));
                         sonido.play();
